@@ -11,6 +11,8 @@ public class mainProgram
 	//black peg = right color, right spot
     static public void Main ()
     {
+		ConsoleColor[] colors = (ConsoleColor[]) ConsoleColor.GetValues(typeof(ConsoleColor));
+		Console.ForegroundColor = colors[7];
 		Game theGame = new Game();
 		Console.Read();
     }
@@ -20,12 +22,14 @@ public class Game{
 	
 	public static string[] colors = new string[6]{"red","blue","green","orange","yellow","purple"};
 	
+	public string difficulty;
 	public int codeLength;
 	public int guesses = 0;
 	public int maxGuesses = 12;
+	public colorPeg[] theCode;
+	
 	public int whitePegs = 0;
 	public int blackPegs = 0;
-	public colorPeg[] theCode;
 	
 	public Random rnd = new Random();
 	
@@ -36,9 +40,8 @@ public class Game{
 		//user wins if entered code = generated code
 		startScreen();
 		codeLength = chooseDifficulty();
-		Console.Clear();
+		Console.WriteLine(codeLength);
 		generateCode(codeLength);
-		Console.WriteLine("The Code: {0},{1},{2},{3}",theCode[0].color,theCode[1].color,theCode[2].color,theCode[3].color);
 		do{
 			guess();
 		} while (guesses != maxGuesses);
@@ -48,8 +51,14 @@ public class Game{
 	
 	public void startScreen(){
 		logo();
-		Console.WriteLine("Mastermind is a game about guessing a code");
-		Console.WriteLine("The code may consist of 6 different colors and may contain repeats");
+		Console.WriteLine("Mastermind is a game about guessing a code.");
+		Console.WriteLine("The code may consist of 6 different colors and may contain repeats.");
+		Console.WriteLine("Try to guess the code by typing the four colors in sequence with a single space in between.");
+		Console.WriteLine("The four colors are red, blue, green, orange, yellow and purple.");
+		Console.WriteLine("If you get a black peg it means one 'peg' is in the right spot and is the right color.");
+		Console.WriteLine("If you get a white peg it means one 'peg' is the right color but in the wrong spot.");
+		Console.WriteLine("Try to guess within {0} tries!",maxGuesses);
+		Console.WriteLine("Good Luck!");
 		Console.Write("Press Enter...");
 		Console.Read();
 		Console.Read();
@@ -57,13 +66,27 @@ public class Game{
 	}
 	
 	public void logo(){
-		Console.WriteLine("   _____                   __                  _____  .__            .___");
-		Console.WriteLine("  /     \\ _____    _______/  |_  ___________  /     \\ |__| ____    __| _/");
-		Console.WriteLine(" /  \\ /  \\\\__  \\  /  ___/\\   __\\/ __ \\_  __ \\/  \\ /  \\|  |/    \\  / __ | ");
-		Console.WriteLine("/    Y    \\/ __ \\_\\___ \\  |  | \\  ___/|  | \\/    Y    \\  |   |  \\/ /_/ | ");
-		Console.WriteLine("\\____|__  (____  /____  > |__|  \\___  >__|  \\____|__  /__|___|  /\\____ | ");
-		Console.WriteLine("        \\/     \\/     \\/            \\/              \\/        \\/      \\/ ");
+//		Console.WriteLine("   _____                   __                  _____  .__            .___");
+//		Console.WriteLine("  /     \\ _____    _______/  |_  ___________  /     \\ |__| ____    __| _/");
+//		Console.WriteLine(" /  \\ /  \\\\__  \\  /  ___/\\   __\\/ __ \\_  __ \\/  \\ /  \\|  |/    \\  / __ | ");
+//		Console.WriteLine("/    Y    \\/ __ \\_\\___ \\  |  | \\  ___/|  | \\/    Y    \\  |   |  \\/ /_/ | ");
+//		Console.WriteLine("\\____|__  (____  /____  > |__|  \\___  >__|  \\____|__  /__|___|  /\\____ | ");
+//		Console.WriteLine("        \\/     \\/     \\/            \\/              \\/        \\/      \\/ ");
+//		Console.WriteLine("");
+	}
+	
+	public void updateGameView (){
+		Console.Clear();
+		logo();
+		Console.WriteLine("Difficulty = {0}		Guesses = {1}		Max Guesses = {2}",difficulty,guesses,maxGuesses);
+		Console.WriteLine("BlackPegs = {0}			WhitePegs = {1}",blackPegs,whitePegs);
+		Console.WriteLine(""); 
+		Console.Write("The Code: ");
+		for(int i = 0; i < codeLength; i++){
+			Console.Write("{0},",theCode[i].color);
+		}
 		Console.WriteLine("");
+		
 	}
 	
 	public int chooseDifficulty(){
@@ -78,16 +101,16 @@ public class Game{
 		
 		switch (userDifficulty){
 		case 1:
-//			Console.WriteLine("Difficulty set to easy");
+			difficulty = "Easy";
 			return 4;
 		case 2:
-//			Console.WriteLine("Difficulty set to medium");
+			difficulty = "Medium";
 			return 6;
 		case 3:
-//			Console.WriteLine("Difficulty set to hard");
+			difficulty = "Hard";
 			return 8;
 		default:
-//			Console.WriteLine("Difficulty set to easy");
+			difficulty = "Easy";
 			return 4;
         }
 	}
@@ -101,22 +124,29 @@ public class Game{
 	
 	public void guess (){
 		
+		updateGameView();
+		
 		string[] guessString = (Console.ReadLine()).Split(' ');
 		if(guessString.Length == codeLength){
 			//Compare the user string to the code array somehow
 			//output the black or white pegs
 			//create victory/defeat conditions
+			blackPegs = 0;
 			int index = 0;
 			foreach(string color in guessString){
 				for(int i = 0; i < codeLength; i++){
-					Console.WriteLine(i);
 					if(color == theCode[i].color && index == i){
-						Console.WriteLine("Black Peg");
+						blackPegs++;
 					}
 				}
-			index++;
+				index++;
 			}
-			guesses++;
+			if(blackPegs == 4){
+				Console.WriteLine("Victory!!");
+			}else{
+				guesses++;
+				updateGameView();
+			}
 		}else{
 			Console.WriteLine("Please enter a guess that is {0} words long",codeLength);
 		}
