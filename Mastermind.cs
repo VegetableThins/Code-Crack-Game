@@ -25,7 +25,7 @@ public class Game{
 	public string difficulty;
 	public int codeLength;
 	public int guesses = 0;
-	public int maxGuesses = 12;
+	public int maxGuesses = 1;
 	public colorPeg[] theCode;
 	
 	public int whitePegs = 0;
@@ -45,6 +45,8 @@ public class Game{
 		do{
 			guess();
 		} while (guesses != maxGuesses);
+		Console.WriteLine("You are out of guesses!!");
+		newGame();
 		
 		
 	}
@@ -128,29 +130,56 @@ public class Game{
 		
 		string[] guessString = (Console.ReadLine()).Split(' ');
 		if(guessString.Length == codeLength){
-			//Compare the user string to the code array somehow
-			//output the black or white pegs
-			//create victory/defeat conditions
 			blackPegs = 0;
+			whitePegs = 0;
 			int index = 0;
+			bool pegSwitch = false;
 			foreach(string color in guessString){
 				for(int i = 0; i < codeLength; i++){
 					if(color == theCode[i].color && index == i){
 						blackPegs++;
+						pegSwitch = true;
 					}
+				}
+				if(!pegSwitch && color == theCode[index].color){
+					whitePegs++;
 				}
 				index++;
 			}
-			if(blackPegs == 4){
+			guesses++;
+			if(blackPegs == codeLength){
+				updateGameView();
 				Console.WriteLine("Victory!!");
+				Console.WriteLine("You finished the game in {0} guesses!",guesses);
+				Console.Write("Press any key to Continue...");
+				Console.ReadKey();
+				newGame();
 			}else{
-				guesses++;
 				updateGameView();
 			}
 		}else{
 			Console.WriteLine("Please enter a guess that is {0} words long",codeLength);
+		} 
+	}
+	
+	public void newGame () {
+		Console.WriteLine("Would you like to play again?");
+		Console.Write("Y/N: ");
+		string decision = Console.ReadLine();
+		if(decision == "y" || decision == "Y"){
+			Console.Clear();
+			Game theGame = new Game();
+		}else if(decision == "n" || decision == "N"){
+			Console.WriteLine("Thank you for playing!");
+			Console.Write("Press any key to exit...");
+			Console.ReadKey();
+			Environment.Exit(0);
+		}else{
+			Console.WriteLine("Please Enter either Yes(Y) or No(N)");
+			Console.Write("Press any key to Continue...");
+			Console.ReadKey();
+			newGame();
 		}
-		Console.Read();
 	}
 	
 	
