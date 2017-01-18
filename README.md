@@ -1,2 +1,2 @@
-# MastermindConsole
+# CodeCrack
 CodeCrack C# console application 
