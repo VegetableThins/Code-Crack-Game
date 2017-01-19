@@ -193,6 +193,14 @@ public class Game{
         Console.WriteLine("You cracked the code in {0} guesse(s)!", guesses);
         Console.Write("Press any key to Continue...");
         Console.ReadKey();
+        Console.WriteLine("The vault contained:");
+        //calculate loot gained
+        //based on difficulty and randomization
+
+
+
+
+        //asked user to play again
         newGame();
     }
 
@@ -217,4 +225,20 @@ public class Game{
 	}
 	
 	
+}
+
+public class Loot (){
+    
+    public int totalValue;
+    public int necklaces;
+    public int rings;
+    public int diamonds;
+    public int rubies;
+    public int emeralds;
+    public int money;
+
+    public Random rnd = new Random();
+    public Loot(){
+        necklaces = 
+    }
 }
