@@ -5,12 +5,6 @@ using System.Linq;
 public class mainProgram
 {
 	
-	//6 colors
-	//4 holes
-	//1 random gen array of 4 colors
-	//12 guesses
-	//white peg = right color, wrong spot
-	//black peg = right color, right spot
     static public void Main ()
     {
 		ConsoleColor[] colors = (ConsoleColor[]) ConsoleColor.GetValues(typeof(ConsoleColor));
@@ -35,7 +29,7 @@ public class Game{
 	public Game(){
         //generate new code
         //check if user code is = generated code
-        //give white or black peg feedback based on array matches
+        //give feedback based on array matches
         //user wins if entered code = generated code
         allGuesses = new List<string>();
 
