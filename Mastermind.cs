@@ -9,8 +9,10 @@ public class mainProgram
     {
 		ConsoleColor[] colors = (ConsoleColor[]) ConsoleColor.GetValues(typeof(ConsoleColor));
 		Console.ForegroundColor = colors[7];
-		Game theGame = new Game();
-		Console.Read();
+        Loot theLoot = new Loot(4);
+        Console.WriteLine(theLoot.totalValue);
+        //Game theGame = new Game();
+        Console.Read();
     }
 }
 
@@ -54,6 +56,7 @@ public class Game{
 		
 		
 	}
+
     public void logo()
     {
         Console.WriteLine("____   ____            .__   __    _________                       __    ");
@@ -227,18 +230,134 @@ public class Game{
 	
 }
 
-public class Loot (){
-    
+public class Loot
+{
+
     public int totalValue;
-    public int necklaces;
-    public int rings;
-    public int diamonds;
-    public int rubies;
-    public int emeralds;
-    public int money;
+    public int numNecklaces;
+    public int numRings;
+    public int numDiamonds;
+    public int numRubies;
+    public int numEmeralds;
+    public int numMonies;
+
+    public int difficultyBonus;
 
     public Random rnd = new Random();
-    public Loot(){
-        necklaces = 
+
+    public Loot(int difficutlty)
+    {
+        totalValue = 0;
+        numNecklaces = 0;
+        numRings = 0;
+        numDiamonds = 0;
+        numRubies = 0;
+        numEmeralds = 0;
+        numMonies = 0;
+        int chance;
+
+        if (difficutlty == 6)
+        {
+            difficultyBonus = 5;
+        }
+        else if (difficutlty == 8)
+        {
+            difficultyBonus = 10;
+        }
+        else
+        {
+            difficultyBonus = 0;
+        }
+
+        //drop chances
+        //necklace 1% ring 5% diamond 10% ruby 20% emerald 30% cash 100%
+        for (int i = 0; i < (difficutlty * 2); i++)
+        {
+            chance = rnd.Next(1, 100);
+            if (chance == (100 - difficultyBonus))
+            {
+                //necklace
+                numNecklaces++;
+                totalValue = totalValue + 1500;
+            }
+            else if (chance >= (95 - difficultyBonus))
+            {
+                //ring
+                numRings++;
+                totalValue = totalValue + 1000;
+            }
+            else if (chance >= (90 - difficultyBonus))
+            {
+                //diamonds
+                numDiamonds++;
+                totalValue = totalValue + 500;
+            }
+            else if (chance >= (80 - difficultyBonus))
+            {
+                //rubies
+                numRubies++;
+                totalValue = totalValue + 300;
+            }
+            else if (chance >= (70 - difficultyBonus))
+            {
+                numEmeralds++;
+                totalValue = totalValue + 150;
+            }
+            else
+            {
+                numMonies++;
+                totalValue = totalValue + rnd.Next(1, 100 + (difficultyBonus));
+            }
+        }
+    }
+
+    public void display()
+    {
+        Console.WriteLine("The Vault Contained:");
+        //output vault content
+
+    }
+}
+
+       
+
+public class Valuable
+{
+    public string Type;
+    public int Value;
+    public Random rnd = new Random();
+    public Valuable(int valuableType)
+    {
+        switch (valuableType)
+        {
+            case 0:
+                Type = "necklace";
+                Value = 1500;
+                break;
+            case 1:
+                Type = "ring";
+                Value = 1000;
+                break;
+            case 2:
+                Type = "diamond";
+                Value = 500;
+                break;
+            case 3:
+                Type = "ruby";
+                Value = 200;
+                break;
+            case 4:
+                Type = "emerald";
+                Value = 100;
+                break;
+            case 5:
+                Type = "cash";
+                Value = rnd.Next(1, 100);
+                break;
+            default:
+                Type = "cash";
+                Value = rnd.Next(1, 100);
+                break;
+        }
     }
 }
