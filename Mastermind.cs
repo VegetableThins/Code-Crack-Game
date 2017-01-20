@@ -9,9 +9,7 @@ public class mainProgram
     {
 		ConsoleColor[] colors = (ConsoleColor[]) ConsoleColor.GetValues(typeof(ConsoleColor));
 		Console.ForegroundColor = colors[7];
-        Loot theLoot = new Loot(4);
-        Console.WriteLine(theLoot.totalValue);
-        //Game theGame = new Game();
+        Game theGame = new Game();
         Console.Read();
     }
 }
@@ -44,8 +42,12 @@ public class Game{
         {
 			guess();
 		} while (guesses != maxGuesses);
-		Console.WriteLine("You are out of guesses.");
+		Console.WriteLine("You are out of guesses...");
+        Console.Write("Continue...");
+        Console.ReadKey();
         Console.WriteLine("The vault remains sealed...");
+        Console.Write("Continue...");
+        Console.ReadKey();
         Console.Write("The Code was: ");
         for (int i = 0; i < theCode.Length; i++)
         {
@@ -59,27 +61,26 @@ public class Game{
 
     public void logo()
     {
-        Console.WriteLine("____   ____            .__   __    _________                       __    ");
-        Console.WriteLine("\\   \\ /   /____   __ __|  |_/  |_  \\_   ___ \\____________    ____ |  | __");
-        Console.WriteLine(" \\   Y   /\\__  \\ |  |  \\  |\\   __\\ /    \\  \\/\\_  __ \\__  \\ _/ ___\\|  |/ /");
-        Console.WriteLine("  \\     /  / __ \\|  |  /  |_|  |   \\     \\____|  | \\// __ \\\\  \\___|    < ");
-        Console.WriteLine("   \\___/  (____  /____/|____/__|    \\______  /|__|  (____  /\\___  >__|_ \\");
-        Console.WriteLine("               \\/                          \\/            \\/     \\/     \\/");
-        Console.WriteLine("");
+        // Console.WriteLine("____   ____            .__   __    _________                       __    ");
+        // Console.WriteLine("\\   \\ /   /____   __ __|  |_/  |_  \\_   ___ \\____________    ____ |  | __");
+        // Console.WriteLine(" \\   Y   /\\__  \\ |  |  \\  |\\   __\\ /    \\  \\/\\_  __ \\__  \\ _/ ___\\|  |/ /");
+        // Console.WriteLine("  \\     /  / __ \\|  |  /  |_|  |   \\     \\____|  | \\// __ \\\\  \\___|    < ");
+        // Console.WriteLine("   \\___/  (____  /____/|____/__|    \\______  /|__|  (____  /\\___  >__|_ \\");
+        // Console.WriteLine("               \\/                          \\/            \\/     \\/     \\/");
+        // Console.WriteLine("");
     }
 
     public void startScreen(){
 		logo();
 		Console.WriteLine("Vault Crack is a game about cracking a code.");
-		Console.WriteLine("The code may consist of 6 different numbers and may contain repeats.");
-		Console.WriteLine("Try to guess the code by typing the numbers in sequence with a single space in between.");
-		Console.WriteLine("The numbers range between 1 - 6");
+		Console.WriteLine("The code may consist of 7 different numbers (ranging from 0-6) and may contain repeats.");
+		Console.WriteLine("The higher the difficulty the longer the code.");
 		Console.WriteLine("The correct tally counts the number of correct numbers in your code.");
         Console.WriteLine("Get all the numbers in the code correct and you've busted the vault.");
         Console.WriteLine("The higher the difficult, the greater the loot!");
         Console.WriteLine("Try to guess within {0} tries!",maxGuesses);
 		Console.WriteLine("Good Luck!");
-		Console.Write("Press Enter...");
+		Console.Write("Press Enter");
         Console.ReadKey();
 		Console.WriteLine("");
 	}
@@ -88,9 +89,9 @@ public class Game{
     {
 
         Console.WriteLine("Please enter a number between 1 and 3");
-        Console.WriteLine("1 = Easy");
-        Console.WriteLine("2 = Medium");
-        Console.WriteLine("3 = Hard");
+        Console.WriteLine("1 = Normal (4 numbers long)");
+        Console.WriteLine("2 = Hard (6 numbers long)");
+        Console.WriteLine("3 = Expert (8 numbers long)");
         Console.Write("Difficulty = ");
 
         string userDifficulty = Console.ReadLine();
@@ -165,6 +166,13 @@ public class Game{
     {
         Console.Clear();
         logo();
+
+        Console.Write("The Code:");
+    for(int i = 0; i<codeLength;i++){
+        Console.Write("{0}",theCode[i]);
+    }
+    Console.WriteLine(" ");
+
         Console.WriteLine("Code Length = {0}		Guesses = {1}		Max Guesses = {2}", codeLength, guesses, maxGuesses);
         Console.WriteLine("Correct #s = {0}		Number Range = 1 - 6", correctNumbers);
         Console.WriteLine("");
@@ -194,20 +202,18 @@ public class Game{
         }
         Console.Write("\n");
         Console.WriteLine("You cracked the code in {0} guesse(s)!", guesses);
-        Console.Write("Press any key to Continue...");
+        Console.Write("Press any key to Continue");
         Console.ReadKey();
-        Console.WriteLine("The vault contained:");
         //calculate loot gained
         //based on difficulty and randomization
-
-
-
-
+        Loot theLoot = new Loot(codeLength);
+        theLoot.display();
         //asked user to play again
         newGame();
     }
 
     public void newGame () {
+        Console.WriteLine(" ");
 		Console.WriteLine("Would you like to play again?");
 		Console.Write("Y/N: ");
 		string decision = Console.ReadLine();
@@ -216,12 +222,12 @@ public class Game{
 			Game theGame = new Game();
 		}else if(decision == "n" || decision == "N"){
 			Console.WriteLine("Thank you for playing!");
-			Console.Write("Press any key to exit...");
+			Console.Write("Press any key to exit");
 			Console.ReadKey();
 			Environment.Exit(0);
 		}else{
 			Console.WriteLine("Please Enter either Yes(Y) or No(N)");
-			Console.Write("Press any key to Continue...");
+			Console.Write("Press any key to Continue");
 			Console.ReadKey();
 			newGame();
 		}
@@ -233,13 +239,9 @@ public class Game{
 public class Loot
 {
 
-    public int totalValue;
-    public int numNecklaces;
-    public int numRings;
-    public int numDiamonds;
-    public int numRubies;
-    public int numEmeralds;
-    public int numMonies;
+    public int totalValue, numNecklaces,numRings,numDiamonds,numRubies,numEmeralds,money;
+
+    public int necklaceValue,ringValue,diamondValue,rubyValue,emeraldValue;
 
     public int difficultyBonus;
 
@@ -248,13 +250,17 @@ public class Loot
     public Loot(int difficutlty)
     {
         totalValue = 0;
+        necklaceValue = 1500;
+        ringValue = 1000;
+        diamondValue = 500;
+        rubyValue = 300;
+        emeraldValue = 150;
         numNecklaces = 0;
         numRings = 0;
         numDiamonds = 0;
         numRubies = 0;
         numEmeralds = 0;
-        numMonies = 0;
-        int chance;
+        money = 0;
 
         if (difficutlty == 6)
         {
@@ -273,49 +279,73 @@ public class Loot
         //necklace 1% ring 5% diamond 10% ruby 20% emerald 30% cash 100%
         for (int i = 0; i < (difficutlty * 2); i++)
         {
-            chance = rnd.Next(1, 100);
+            int chance = rnd.Next(1, 100);
             if (chance == (100 - difficultyBonus))
             {
                 //necklace
                 numNecklaces++;
-                totalValue = totalValue + 1500;
+                totalValue = totalValue + necklaceValue;
             }
             else if (chance >= (95 - difficultyBonus))
             {
                 //ring
                 numRings++;
-                totalValue = totalValue + 1000;
+                totalValue = totalValue + ringValue;
             }
             else if (chance >= (90 - difficultyBonus))
             {
                 //diamonds
                 numDiamonds++;
-                totalValue = totalValue + 500;
+                totalValue = totalValue + diamondValue;
             }
             else if (chance >= (80 - difficultyBonus))
             {
                 //rubies
                 numRubies++;
-                totalValue = totalValue + 300;
+                totalValue = totalValue + rubyValue;
             }
             else if (chance >= (70 - difficultyBonus))
             {
                 numEmeralds++;
-                totalValue = totalValue + 150;
+                totalValue = totalValue + emeraldValue;
             }
             else
             {
-                numMonies++;
-                totalValue = totalValue + rnd.Next(1, 100 + (difficultyBonus));
+                int newmoney = rnd.Next(1, 100 + (difficultyBonus));
+                money = money + newmoney;
+                totalValue = totalValue + newmoney;
             }
         }
     }
 
     public void display()
     {
-        Console.WriteLine("The Vault Contained:");
+        Console.WriteLine(" ");
+        Console.WriteLine(" ");
+        Console.WriteLine("The Vault Contained a total of ${0}.",totalValue);
+        Console.WriteLine(" ");
         //output vault content
-
+        if(numNecklaces != 0){
+            Console.WriteLine(" {0} Necklace(s) : ${1}",numNecklaces,(numNecklaces*necklaceValue));
+        }
+        if(numRings != 0){
+            Console.WriteLine(" {0} Ring(s)     : ${1}",numRings,(numRings*ringValue));
+        }
+        if(numDiamonds != 0){
+            Console.WriteLine(" {0} Diamond(s)  : ${1}",numDiamonds,(numDiamonds*diamondValue));
+        }
+        if(numRubies != 0){
+            Console.WriteLine(" {0} Ruby(s)     : ${1}",numRubies,(numRubies*rubyValue));
+        }
+        if(numEmeralds != 0){
+            Console.WriteLine(" {0} Emerald(s)  : ${1}",numEmeralds,(numEmeralds*emeraldValue));
+        }
+        if(money != 0){
+            Console.WriteLine("     Cash        : ${0}",money);
+        }
+        Console.WriteLine(" ");
+        Console.Write("press any key to Continue");
+        Console.ReadKey();
     }
 }
 
