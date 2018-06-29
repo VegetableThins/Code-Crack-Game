@@ -4,7 +4,6 @@ using System.Linq;
 
 public class mainProgram
 {
-	
     static public void Main ()
     {
 		ConsoleColor[] colors = (ConsoleColor[]) ConsoleColor.GetValues(typeof(ConsoleColor));
@@ -15,10 +14,10 @@ public class mainProgram
 }
 
 public class Game{
-	
+	static public int totalEarnings = 0;
 	public int codeLength;
 	public int guesses = 0;
-	public int maxGuesses = 12;
+	public int maxGuesses = 15;
     public List<string> allGuesses;
 	public string[] theCode;
 	
@@ -61,13 +60,13 @@ public class Game{
 
     public void logo()
     {
-        // Console.WriteLine("____   ____            .__   __    _________                       __    ");
-        // Console.WriteLine("\\   \\ /   /____   __ __|  |_/  |_  \\_   ___ \\____________    ____ |  | __");
-        // Console.WriteLine(" \\   Y   /\\__  \\ |  |  \\  |\\   __\\ /    \\  \\/\\_  __ \\__  \\ _/ ___\\|  |/ /");
-        // Console.WriteLine("  \\     /  / __ \\|  |  /  |_|  |   \\     \\____|  | \\// __ \\\\  \\___|    < ");
-        // Console.WriteLine("   \\___/  (____  /____/|____/__|    \\______  /|__|  (____  /\\___  >__|_ \\");
-        // Console.WriteLine("               \\/                          \\/            \\/     \\/     \\/");
-        // Console.WriteLine("");
+         Console.WriteLine("____   ____            .__   __    _________                       __    ");
+         Console.WriteLine("\\   \\ /   /____   __ __|  |_/  |_  \\_   ___ \\____________    ____ |  | __");
+         Console.WriteLine(" \\   Y   /\\__  \\ |  |  \\  |\\   __\\ /    \\  \\/\\_  __ \\__  \\ _/ ___\\|  |/ /");
+         Console.WriteLine("  \\     /  / __ \\|  |  /  |_|  |   \\     \\____|  | \\// __ \\\\  \\___|    < ");
+         Console.WriteLine("   \\___/  (____  /____/|____/__|    \\______  /|__|  (____  /\\___  >__|_ \\");
+         Console.WriteLine("               \\/                          \\/            \\/     \\/     \\/");
+         Console.WriteLine("");
     }
 
     public void startScreen(){
@@ -122,7 +121,7 @@ public class Game{
         theCode = new string[codeLength];
         for (int i = 0; i < codeLength; i++)
         {
-            theCode[i] = rnd.Next(0, 6).ToString();
+            theCode[i] = rnd.Next(1, 6).ToString();
         }
     }
 	
@@ -166,12 +165,11 @@ public class Game{
     {
         Console.Clear();
         logo();
-
-        Console.Write("The Code:");
-    for(int i = 0; i<codeLength;i++){
-        Console.Write("{0}",theCode[i]);
-    }
-    Console.WriteLine(" ");
+        
+        Console.Write("The code = {0}",theCode);
+        Console.Write("Total Vault Earnings = {0}",totalEarnings);
+        Console.WriteLine(" ");
+        Console.WriteLine(" ");
 
         Console.WriteLine("Code Length = {0}		Guesses = {1}		Max Guesses = {2}", codeLength, guesses, maxGuesses);
         Console.WriteLine("Correct #s = {0}		Number Range = 1 - 6", correctNumbers);
@@ -208,6 +206,7 @@ public class Game{
         //based on difficulty and randomization
         Loot theLoot = new Loot(codeLength);
         theLoot.display();
+        totalEarnings += theLoot.getTotalValue();
         //asked user to play again
         newGame();
     }
@@ -316,6 +315,10 @@ public class Loot
                 totalValue = totalValue + newmoney;
             }
         }
+    }
+    
+    public int getTotalValue(){
+        return totalValue;
     }
 
     public void display()
